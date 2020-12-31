@@ -1,15 +1,15 @@
 version: "3.5"
 services:
-  centos7php74build:
+  centos7php80build:
     build:
       context: .
       args:
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-build"
-  centos7php74buildrel:
+    image: "aursu/php80build:${OS7TAG}-build"
+  centos7php80buildrel:
     build:
       context: .
       dockerfile: Dockerfile.rel
       args:
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-build-rel"
+    image: "aursu/php80build:${OS7TAG}-build-rel"

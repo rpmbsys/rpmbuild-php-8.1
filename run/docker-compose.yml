@@ -1,15 +1,15 @@
 version: "3.5"
 services:
-  centos7php74run:
+  centos7php80run:
     build:
       context: .
       args:
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-runtime"
-  centos7php74devbase:
+    image: "aursu/php80build:${OS7TAG}-runtime"
+  centos7php80devbase:
     build:
       context: .
       args:
         image: nodedev
         centos: $OS7
-    image: "aursu/php74build:${OS7TAG}-devbase"
+    image: "aursu/php80build:${OS7TAG}-devbase"

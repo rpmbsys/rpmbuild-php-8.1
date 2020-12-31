@@ -4,85 +4,85 @@ orbs:
   docker-rpmbuild: aursu/rpmbuild@1.1.2
 
 workflows:
-  php74build:
+  php80build:
     jobs:
       - docker-rpmbuild/rpmbuild:
-          name: centos7php74
-          base_service: centos7php74base
-          build_service: centos7php74
+          name: centos7php80
+          base_service: centos7php80base
+          build_service: centos7php80
           bintray_uploader: centos7bintray
       - docker-rpmbuild/rpmbuild:
-          name: centos7php74rel
-          base_service: centos7php74base
-          build_service: centos7php74rel
+          name: centos7php80rel
+          base_service: centos7php80base
+          build_service: centos7php80rel
           bintray_uploader: centos7bintray
       - docker-rpmbuild/rpmbuild:
-          name: centos8php74
-          base_service: centos8php74base
+          name: centos8php80
+          base_service: centos8php80base
           build_file: docker-compose.el8.yml
-          build_service: centos8php74
+          build_service: centos8php80
           bintray_uploader: centos8bintray
       - docker-rpmbuild/rpmbuild:
-          name: centos8php74rel
-          base_service: centos8php74base
+          name: centos8php80rel
+          base_service: centos8php80base
           build_file: docker-compose.el8.yml
-          build_service: centos8php74rel
+          build_service: centos8php80rel
           bintray_uploader: centos8bintray
       - docker-rpmbuild/image:
-          name: centos7php74build
-          build_service: centos7php74build
+          name: centos7php80build
+          build_service: centos7php80build
           requires:
-            - centos7php74
+            - centos7php80
       - docker-rpmbuild/image:
-          name: centos7php74buildrel
-          build_service: centos7php74buildrel
+          name: centos7php80buildrel
+          build_service: centos7php80buildrel
           requires:
-            - centos7php74rel
+            - centos7php80rel
       - docker-rpmbuild/image:
-          name: centos8php74build
+          name: centos8php80build
           compose_file: build/docker-compose.el8.yml
-          build_service: centos8php74build
+          build_service: centos8php80build
           requires:
-            - centos8php74
+            - centos8php80
       - docker-rpmbuild/image:
-          name: centos8php74buildrel
+          name: centos8php80buildrel
           compose_file: build/docker-compose.el8.yml
-          build_service: centos8php74buildrel
+          build_service: centos8php80buildrel
           requires:
-            - centos8php74rel
+            - centos8php80rel
       - docker-rpmbuild/image:
-          name: centos7php74run
+          name: centos7php80run
           compose_file: run/docker-compose.yml
-          build_service: centos7php74run
+          build_service: centos7php80run
           requires:
-            - centos7php74
+            - centos7php80
       - docker-rpmbuild/image:
-          name: centos7php74devbase
+          name: centos7php80devbase
           compose_file: run/docker-compose.yml
-          build_service: centos7php74devbase
+          build_service: centos7php80devbase
           requires:
-            - centos7php74
+            - centos7php80
       - docker-rpmbuild/image:
-          name: centos8php74run
+          name: centos8php80run
           compose_file: run/docker-compose.el8.yml
-          build_service: centos8php74run
+          build_service: centos8php80run
           requires:
-            - centos8php74
+            - centos8php80
       - docker-rpmbuild/image:
-          name: centos8php74devbase
+          name: centos8php80devbase
           compose_file: run/docker-compose.el8.yml
-          build_service: centos8php74devbase
+          build_service: centos8php80devbase
           requires:
-            - centos8php74
+            - centos8php80
       - docker-rpmbuild/image:
-          name: centos7php74dev
+          name: centos7php80dev
           compose_file: run/docker-compose.dev.yml
-          build_service: centos7php74dev
+          build_service: centos7php80dev
           requires:
-            - centos7php74devbase
+            - centos7php80devbase
       - docker-rpmbuild/image:
-          name: centos8php74dev
+          name: centos8php80dev
           compose_file: run/docker-compose.dev.yml
-          build_service: centos8php74dev
+          build_service: centos8php80dev
           requires:
-            - centos8php74devbase
+            - centos8php80devbase
