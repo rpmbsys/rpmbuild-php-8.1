@@ -44,16 +44,16 @@
 %global with_relocation 0%{?_with_relocation:1}
 
 %if %{with_relocation}
-%global program_suffix      7
-%global main_name           php7
-%global fpm_name            php7-fpm
-%global php_sysconfdir      %{_sysconfdir}/php7
-%global php_datadir         %{_datadir}/php7
+%global program_suffix      80
+%global main_name           php80
+%global fpm_name            php80-fpm
+%global php_sysconfdir      %{_sysconfdir}/php80
+%global php_datadir         %{_datadir}/php80
 %global pear_datadir        %{php_datadir}/pear
-%global php_docdir          %{_docdir}/php7
+%global php_docdir          %{_docdir}/php80
 %global tests_datadir       %{php_datadir}/tests
 # configured by relocation patch (in other words - hardcoded)
-%global fpm_config_name     php7-fpm.conf
+%global fpm_config_name     php80-fpm.conf
 %global fpm_config_d        %{php_sysconfdir}/php%{program_suffix}-fpm.d
 %global bin_phar            phar%{program_suffix}
 %global bin_cli             php%{program_suffix}
@@ -63,7 +63,7 @@
 %global bin_fpm             php%{program_suffix}-fpm
 %global bin_php_config      php%{program_suffix}-config
 %global fpm_datadir         %{_datadir}/php%{program_suffix}-fpm
-%global php_includedir      %{_includedir}/php7
+%global php_includedir      %{_includedir}/php80
 %else
 %global main_name           php
 %global fpm_name            php-fpm
@@ -179,17 +179,17 @@ Source51: opcache-default.blacklist
 Source53: 20-ffi.ini
 
 # relocation resources
-Source101: php7-php.conf
-Source103: php7-macros.php
-Source104: php7-php-fpm.conf
-Source105: php7-php-fpm-www.conf
-Source106: php7-php-fpm.service
-Source107: php7-php-fpm.logrotate
-Source112: php7-php-fpm.wants
-Source113: php7-nginx-fpm.conf
-Source114: php7-nginx-php.conf
-Source150: php7-10-opcache.ini
-Source153: php7-20-ffi.ini
+Source101: php80-php.conf
+Source103: php80-macros.php
+Source104: php80-php-fpm.conf
+Source105: php80-php-fpm-www.conf
+Source106: php80-php-fpm.service
+Source107: php80-php-fpm.logrotate
+Source112: php80-php-fpm.wants
+Source113: php80-nginx-fpm.conf
+Source114: php80-nginx-php.conf
+Source150: php80-10-opcache.ini
+Source153: php80-20-ffi.ini
 
 # Build fixes
 Patch1: php-7.4.0-httpd.patch
@@ -216,7 +216,7 @@ Patch49: php-5.6.31-no-scan-dir-override.patch
 Patch300: php-5.6.3-datetests.patch
 
 # relocation (400+)
-Patch405: php7-php-7.2.0-includedir.patch
+Patch405: php80-php-7.2.0-includedir.patch
 Patch409: php-7.0.8-relocation.patch
 
 BuildRequires: autoconf >= 2.64
@@ -1125,7 +1125,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_libdir}/pear \
 
 # install the DSO
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
-install -m 755 build-apache/libs/libphp7.so $RPM_BUILD_ROOT%{_httpd_moddir}
+install -m 755 build-apache/libs/libphp.so $RPM_BUILD_ROOT%{_httpd_moddir}
 
 # Apache config fragment
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_confdir}
@@ -1343,8 +1343,8 @@ rm -rf $RPM_BUILD_ROOT%{php_libdir}/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/zts-phar* \
        $RPM_BUILD_ROOT%{_mandir}/man1/zts-phar* \
        $RPM_BUILD_ROOT%{pear_datadir} \
-       $RPM_BUILD_ROOT%{_libdir}/libphp7.a \
-       $RPM_BUILD_ROOT%{_libdir}/libphp7.la
+       $RPM_BUILD_ROOT%{_libdir}/libphp.a \
+       $RPM_BUILD_ROOT%{_libdir}/libphp.la
 
 # Remove irrelevant docs
 rm -f README.{Zeus,QNX,CVS-RULES}
@@ -1369,7 +1369,7 @@ exit 0
 %endif # if %{with_fpm}
 
 %files
-%{_httpd_moddir}/libphp7.so
+%{_httpd_moddir}/libphp.so
 %config(noreplace) %{_httpd_confdir}/02-php.conf
 %config(noreplace) %{_httpd_modconfdir}/15-php.conf
 
@@ -1506,8 +1506,38 @@ exit 0
 %endif
 
 %changelog
-* Tue Nov 24 2020 Remi Collet <remi@remirepo.net> - 7.4.13-1
-- Update to 7.4.13 - http://www.php.net/releases/7_4_13.php
+* Wed Nov 25 2020 Remi Collet <remi@remirepo.net> - 8.0.0-1
+- update to 8.0.0 GA
+
+* Wed Nov 18 2020 Remi Collet <remi@remirepo.net> - 8.0.0~rc5-9
+- update to 8.0.0RC5
+- use oracle client library version 19.9
+
+* Wed Sep 30 2020 Remi Collet <remi@remirepo.net> - 8.0.0~rc1-34
+- update to 8.0.0rc1
+- bump ABI/API versions
+
+* Thu Sep 17 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta4-4
+- drop mod_php for ZTS (have never be suported)
+- use %%bcond_without for dtrace, libgd, firebird, lsws, libpcre and zts
+  so can be disabled during rebuild
+- use %%bcond_with for libgd, libpcre, oci8, zip and debug
+  so can be enabled during rebuild
+
+* Thu Sep 17 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta4-3
+- properly use --enable-zts for ZTS builds
+
+* Fri Sep 11 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta3-1
+- update to 8.0.0beta3
+- bump ABI/API versions
+- drop xmlrpc extension
+- json is now build statically
+- use system nikic/php-parser if available to generate
+  C headers from PHP stub
+- switch from "runselftest" option to %bcond_without tests
+- enchant: use libenchant-2 instead of libenchant
+- rename 15-php.conf to 20-php.conf to ensure load order
+- oci8 version is now 3.0.0
 
 * Tue Sep  1 2020 Remi Collet <remi@remirepo.net> - 7.4.10-1
 - Update to 7.4.10 - http://www.php.net/releases/7_4_10.php
