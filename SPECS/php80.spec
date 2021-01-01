@@ -108,6 +108,9 @@
 %global apiver      20190902
 %global zendver     20190902
 %global pdover      20170320
+# Extension version
+%global fileinfover 1.0.5
+%global zipver      1.19.1
 
 # we don't want -z defs linker flag
 %undefine _strict_symbol_defs_build
@@ -135,14 +138,15 @@
 %{!?_httpd_confdir: %global _httpd_confdir %{_sysconfdir}/httpd/conf.d}
 %{!?_httpd_moddir: %global _httpd_moddir %{_libdir}/httpd/modules}
 
-%global with_zip    1
+%bcond_without         dtrace
+%bcond_without         zip
 
 %global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 7.4.13
+Version: 8.0.0
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -152,7 +156,6 @@ Release: %{rpmrel}%{?dist}
 # ext/date/lib is MIT
 # Zend/zend_sort is NCSA
 License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA
-Group: Development/Languages
 URL: http://www.php.net/
 
 Source0: http://www.php.net/distributions/php-%{version}.tar.xz
@@ -194,17 +197,21 @@ Source153: php80-20-ffi.ini
 # Build fixes
 Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
-Patch8: php-7.2.0-libdb.patch
+Patch8: php-7.4.0-libdb.patch
+Patch9: php-7.0.7-curl.patch
 
 # Functional changes
-Patch42: php-7.3.3-systzdata-v18.patch
+# Use system nikic/php-parser
+Patch41: php-8.0.0-parser.patch
+# use system tzdata
+Patch42: php-8.0.0-systzdata-v19.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-7.4.0-ldap_r.patch
 # drop "Configure command" from phpinfo output
-# and add build system and provider (from 8.0)
-Patch47: php-7.4.8-phpinfo.patch
+# and only use gcc (instead of full version)
+Patch47: php-8.0.0-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
@@ -213,7 +220,7 @@ Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
-Patch300: php-5.6.3-datetests.patch
+Patch300: php-7.4.0-datetests.patch
 
 # relocation (400+)
 Patch405: php80-php-7.2.0-includedir.patch
@@ -222,42 +229,44 @@ Patch409: php-7.0.8-relocation.patch
 BuildRequires: autoconf >= 2.64
 BuildRequires: bison
 BuildRequires: bzip2-devel
-BuildRequires: libdb-devel
 BuildRequires: flex
-BuildRequires: freetype-devel
 BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
 BuildRequires: libacl-devel
 BuildRequires: libc-client-devel
-BuildRequires: libjpeg-devel
-BuildRequires: libpng-devel
+BuildRequires: libdb-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
 BuildRequires: libtool-ltdl-devel
-BuildRequires: libwebp-devel
 %if %{with_fpm}
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
 %endif
 BuildRequires: openssl-devel >= 1.0.1
+BuildRequires: perl
+BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(icu-i18n) >= 50.1
 BuildRequires: pkgconfig(icu-io)   >= 50.1
 BuildRequires: pkgconfig(icu-uc)   >= 50.1
-BuildRequires: pkgconfig(libcurl) >= 7.15.5
+BuildRequires: pkgconfig(libcurl) >= 7.29.0
+BuildRequires: pkgconfig(libjpeg)
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(libwebp)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(oniguruma) >= 6.8
 BuildRequires: pkgconfig(sqlite3) >= 3.7.4
 BuildRequires: pkgconfig(zlib) >= 1.2.0.4
-BuildRequires: perl
 BuildRequires: smtpdaemon
-BuildRequires: systemtap-sdt-devel
+%if %{with dtrace}
+BuildRequires: %{?dtsprefix}systemtap-sdt-devel
+%endif
 BuildRequires: unixODBC-devel
-Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 # used for tests
 BuildRequires: %{_bindir}/ps
 
+Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 Requires: httpd-mmn = %{_httpd_mmn}
 # to ensure we are using httpd with filesystem feature (see #1081453)
 Requires: httpd-filesystem >= 2.4
@@ -284,12 +293,10 @@ The php package contains the module (often referred to as mod_php)
 which adds support for the PHP language to Apache HTTP Server.
 
 %package common
-Group: Development/Languages
 Summary: Common files for PHP
 # All files licensed under PHP version 3.01, except
 # fileinfo is licensed under PHP version 3.0
 # regex, libmagic are licensed under BSD
-# libXMLRPC is licensed under BSD
 # libmbfl is licensed under LGPLv2
 # ucgendat is licensed under OpenLDAP
 License: PHP and BSD and LGPLv2 and OpenLDAP
@@ -387,14 +394,18 @@ Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 # these functions are enabled by default
 Provides: php-tokenizer, php-tokenizer%{?_isa}
-# XML-RPC support in PHP is not enabled by default. You will need to use the --with-xmlrpc
-Provides: php-xmlrpc, php-xmlrpc%{?_isa}
-%if %{with_zip}
+%if %{with zip}
 # compile PHP with zip support by using the --with-zip
 Provides: php-zip, php-zip%{?_isa}
+Provides:  php-pecl(zip)         = %{zipver}
+Provides:  php-pecl(zip)%{?_isa} = %{zipver}
+Provides:  php-pecl-zip          = %{zipver}
+Provides:  php-pecl-zip%{?_isa}  = %{zipver}
 %endif
 # Zlib support in PHP is not enabled by default. You will need to configure PHP --with-zlib
 Provides: php-zlib, php-zlib%{?_isa}
+Provides:  php-pecl-Fileinfo = %{fileinfover}, php-pecl-Fileinfo%{?_isa} = %{fileinfover}
+Provides:  php-pecl(Fileinfo) = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
 %if ! %{with_relocation}
 Obsoletes: php-dba < %{version}-%{baserel}
 Obsoletes: php-gd < %{version}-%{baserel}
@@ -416,7 +427,7 @@ package and the %{php_cli} package.
 
 %if %{with_cli}
 %package cli
-Group: Development/Languages
+
 Summary: Command-line interface for PHP
 # sapi/cli/ps_title.c is PostgreSQL
 License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and PostgreSQL
@@ -433,7 +444,7 @@ executing PHP scripts, /usr/bin/php.
 
 %if %{with_cgi}
 %package cgi
-Group: Development/Languages
+
 Summary: CGI interface for PHP
 # for monolithic config use we need ensure that all extensions are installed
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
@@ -444,7 +455,7 @@ PHP scripts, /usr/bin/php-cgi
 
 #%package ioncube
 #Summary: ionCube extension for PHP
-#Group: Development/Languages
+#
 #Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 
 #%description ioncube
@@ -455,7 +466,7 @@ PHP scripts, /usr/bin/php-cgi
 
 %if %{with_fpm}
 %package fpm
-Group: Development/Languages
+
 Summary: PHP FastCGI Process Manager
 BuildRequires: libacl-devel
 BuildRequires: nginx-filesystem
@@ -485,6 +496,9 @@ Requires: libxml2-devel%{?_isa}
 Requires: openssl-devel%{?_isa} >= 1.0.1
 Requires: pcre2-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
+%if 0%{?fedora} || 0%{?rhel} >= 8
+Recommends: php-nikic-php-parser4 >= 4.3.0
+%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -515,10 +529,9 @@ bytecode optimization patterns that make code execution faster.
 %if %{with_xml}
 %package xml
 Summary: A module for PHP applications which use XML
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01, except
-# libXMLRPC is licensed under BSD
-License: PHP and BSD
+License: PHP
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 # This extension is enabled by default
 Provides: php-dom, php-dom%{?_isa}
@@ -544,7 +557,7 @@ and performing XSL transformations on XML documents.
 %if %{with_pgsql}
 %package pgsql
 Summary: A PostgreSQL database module for PHP
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01
 License: PHP
 BuildRequires: postgresql-devel
@@ -563,7 +576,7 @@ php package.
 %if %{with_odbc}
 %package odbc
 Summary: A module for PHP applications that use ODBC databases
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01, except
 # pdo_odbc is licensed under PHP version 3.0
 License: PHP
@@ -584,7 +597,7 @@ package.
 %if %{with_bcmath}
 %package bcmath
 Summary: A module for PHP applications for using the bcmath library
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01, except
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
@@ -600,7 +613,7 @@ support for using the bcmath library to PHP.
 %if %{with_ldap}
 %package ldap
 Summary: A module for PHP applications that use LDAP
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
@@ -618,7 +631,7 @@ language.
 %if %{with_posix}
 %package process
 Summary: Modules for PHP script using system process interfaces
-Group: Development/Languages
+
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
@@ -702,6 +715,12 @@ possibility to act as a socket server as well as a client.
 %endif
 
 %prep
+%if %{with dtrace}
+: Enable Dtrace build
+%endif
+
+%{?gpgverify:%{gpgverify} --keyring='%{SOURCE20}' --signature='%{SOURCE21}' --data='%{SOURCE0}'}
+
 %setup -q -n php-%{version}
 
 #%if %{with_cgi}
@@ -718,11 +737,15 @@ possibility to act as a socket server as well as a client.
 %endif
 
 %patch8 -p1
+%if 0%{?rhel}
+%patch9 -p1
+%endif
 
 %if %{with_relocation}
 %patch409 -p1
 %endif
 
+%patch41 -p1
 %patch42 -p1
 %patch43 -p1
 %patch45 -p1
@@ -800,6 +823,13 @@ if test "x${vpdo}" != "x%{pdover}"; then
    exit 1
 fi
 
+ver=$(sed -n '/#define PHP_ZIP_VERSION /{s/.* "//;s/".*$//;p}' ext/zip/php_zip.h)
+if test "$ver" != "%{zipver}"; then
+   : Error: Upstream ZIP version is now ${ver}, expecting %{zipver}.
+   : Update the %{zipver} macro and rebuild.
+   exit 1
+fi
+
 # https://bugs.php.net/63362 - Not needed but installed headers.
 # Drop some Windows specific headers to avoid installation,
 # before build to ensure they are really not needed.
@@ -845,6 +875,8 @@ export PHP_BUILD_SYSTEM=$(cat /etc/redhat-release | sed -e 's/ Beta//')
 %if 0%{?vendor:1}
 export PHP_BUILD_PROVIDER="%{vendor}"
 %endif
+export PHP_BUILD_COMPILER="$(gcc --version | head -n1)"
+export PHP_BUILD_ARCH="%{_arch}"
 
 # Force use of system libtool:
 libtoolize --force --copy
@@ -922,13 +954,14 @@ ln -sf ../configure
     --with-system-ciphers \
     --with-system-tzdata \
     --with-webp \
-    --with-xmlrpc \
-%if %{with_zip}
+%if %{with zip}
     --with-zip \
 %endif
     --with-zlib \
     --without-pear \
+%if %{with dtrace}
     --enable-dtrace \
+%endif
 %if %{with_sodium}
     --with-sodium=shared \
 %else
@@ -1138,7 +1171,7 @@ cat %{SOURCE1} > httpd-php.conf
 install -D -m 644 httpd-php.conf $RPM_BUILD_ROOT%{_httpd_confdir}/02-php.conf
 
 # Dual config file with httpd >= 2.4 (fedora >= 18)
-install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/15-php.conf
+install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/20-php.conf
 
 %if %{with_common}
 install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php.d
@@ -1153,9 +1186,6 @@ install -m 755 -d $RPM_BUILD_ROOT%{php_sysconfdir}/php-cgi-fcgi.d
 %endif
 
 %if %{with_cgi}
-# install ioncube
-#install -D -m 755 ioncube/ioncube_loader_lin_7.4.so $RPM_BUILD_ROOT%{php_libdir}/modules/ioncube_loader_lin_7.4.so
-
 # install config
 sed "s,@LIBDIR@,%{_libdir},g" \
     < %{SOURCE15} > php-cgi-fcgi.ini
@@ -1330,7 +1360,8 @@ cat %{SOURCE3} > macros.php
 sed -i -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "s/@PHP_ZENDVER@/%{zendver}%{isasuffix}/" \
     -e "s/@PHP_PDOVER@/%{pdover}%{isasuffix}/" \
-    -e "s/@PHP_VERSION@/%{version}/" macros.php
+    -e "s/@PHP_VERSION@/%{version}/" \
+    -e "/zts/d" macros.php
 mkdir -p $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
 install -m 644 -D macros.php \
            $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.%{php_main}
@@ -1371,7 +1402,7 @@ exit 0
 %files
 %{_httpd_moddir}/libphp.so
 %config(noreplace) %{_httpd_confdir}/02-php.conf
-%config(noreplace) %{_httpd_modconfdir}/15-php.conf
+%config(noreplace) %{_httpd_modconfdir}/20-php.conf
 
 %if %{with_common}
 %files common
@@ -1418,9 +1449,6 @@ exit 0
 %{_bindir}/%{bin_cgi}
 %config(noreplace) %{php_sysconfdir}/php-cgi-fcgi.ini
 %{_mandir}/man1/%{bin_cgi}.1*
-
-#%files ioncube
-#%attr(755,root,root) %{php_libdir}/modules/ioncube_loader_lin_7.4.so
 %endif
 
 %if %{with_fpm}
@@ -1509,35 +1537,22 @@ exit 0
 * Wed Nov 25 2020 Remi Collet <remi@remirepo.net> - 8.0.0-1
 - update to 8.0.0 GA
 
-* Wed Nov 18 2020 Remi Collet <remi@remirepo.net> - 8.0.0~rc5-9
-- update to 8.0.0RC5
-- use oracle client library version 19.9
-
 * Wed Sep 30 2020 Remi Collet <remi@remirepo.net> - 8.0.0~rc1-34
 - update to 8.0.0rc1
 - bump ABI/API versions
 
 * Thu Sep 17 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta4-4
 - drop mod_php for ZTS (have never be suported)
-- use %%bcond_without for dtrace, libgd, firebird, lsws, libpcre and zts
+- use %%bcond_without for zip, dtrace
   so can be disabled during rebuild
-- use %%bcond_with for libgd, libpcre, oci8, zip and debug
-  so can be enabled during rebuild
-
-* Thu Sep 17 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta4-3
-- properly use --enable-zts for ZTS builds
 
 * Fri Sep 11 2020 Remi Collet <remi@remirepo.net> - 8.0.0~beta3-1
 - update to 8.0.0beta3
 - bump ABI/API versions
 - drop xmlrpc extension
-- json is now build statically
 - use system nikic/php-parser if available to generate
   C headers from PHP stub
-- switch from "runselftest" option to %bcond_without tests
-- enchant: use libenchant-2 instead of libenchant
 - rename 15-php.conf to 20-php.conf to ensure load order
-- oci8 version is now 3.0.0
 
 * Tue Sep  1 2020 Remi Collet <remi@remirepo.net> - 7.4.10-1
 - Update to 7.4.10 - http://www.php.net/releases/7_4_10.php
