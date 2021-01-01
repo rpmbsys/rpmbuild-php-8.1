@@ -105,8 +105,8 @@
 %global fpm_unit            %{fpm_service}.service
 %global fpm_logrotate       %{fpm_service}
 
-%global apiver      20190902
-%global zendver     20190902
+%global apiver      20200930
+%global zendver     20200930
 %global pdover      20170320
 # Extension version
 %global fileinfover 1.0.5
