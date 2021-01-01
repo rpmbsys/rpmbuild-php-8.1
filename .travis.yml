@@ -10,7 +10,7 @@ addons:
 
 env:
   global:
-    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-7.4
+    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-8.0
     - BINTRAY_REPO=php8custom
     - OS7=7.9.2009
     - OS8=8.3.2011
