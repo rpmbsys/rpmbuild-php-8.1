@@ -40,16 +40,13 @@ Sections `Prerequisites` and `Setup` should be done only once per build host
     systemctl start docker
     ```
 
-5. Port 80 on build host should be free (stop nginx/httpd or move to different
-port)
-
 ### Setup
 
 1. Clone build repo with submodules:
 
     ```
-    git clone --recursive https://github.com/aursu/rpmbuild-php-7.4.git
-    cd rpmbuild-php-7.4
+    git clone --recursive https://github.com/aursu/rpmbuild-php-8.0.git
+    cd rpmbuild-php-8.0
     ```
 
 2. Setup build environment:
@@ -82,9 +79,9 @@ to run any of them or run in foreground etc
 
 ### Access RPM packages
 
-1. RPM packages located inside `rpm6`, `rpm7` and `rpm8` volumes
+1. RPM packages located inside `rpm7` and `rpm8` volumes
 
-### Cleanup build
+### Clean up build
 
 To complete all build processes run commands:
 
