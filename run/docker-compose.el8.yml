@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.el8
       args:
         centos: $OS8
-    image: "aursu/php80build:${OS8TAG}-runtime"
+    image: aursu/php80build:${OS8TAG}-runtime
   centos8php80devbase:
     build:
       context: .
@@ -14,4 +14,4 @@ services:
       args:
         image: nodedev
         centos: $OS8
-    image: "aursu/php80build:${OS8TAG}-devbase"
+    image: aursu/php80build:${OS8TAG}-devbase
