@@ -110,7 +110,7 @@
 %global pdover      20170320
 # Extension version
 %global fileinfover 1.0.5
-%global zipver      1.19.1
+%global zipver      1.19.2
 
 # we don't want -z defs linker flag
 %undefine _strict_symbol_defs_build
@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.0.0
+Version: 8.0.2
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -215,6 +215,7 @@ Patch47: php-8.0.0-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
+Patch100: php-bug80682.patch
 
 # Security fixes (200+)
 
@@ -239,6 +240,7 @@ BuildRequires: libdb-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
 BuildRequires: libtool-ltdl-devel
+BuildRequires: make
 %if %{with_fpm}
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
@@ -493,6 +495,7 @@ Requires: autoconf
 # see "php-config --libs"
 Requires: krb5-devel%{?_isa}
 Requires: libxml2-devel%{?_isa}
+Requires: make
 Requires: openssl-devel%{?_isa} >= 1.0.1
 Requires: pcre2-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
@@ -753,6 +756,7 @@ possibility to act as a socket server as well as a client.
 %patch49 -p1
 
 # upstream patches
+%patch100 -p1 -b .bug80682
 
 # security patches
 
@@ -1534,6 +1538,12 @@ exit 0
 %endif
 
 %changelog
+* Tue Feb  2 2021 Remi Collet <remi@remirepo.net> - 8.0.2-1
+- Update to 8.0.2 - http://www.php.net/releases/8_0_2.php
+
+* Thu Jan 28 2021 Remi Collet <remi@remirepo.net> - 8.0.2~RC1-2
+- add upstream patch for https://bugs.php.net/80682
+
 * Wed Nov 25 2020 Remi Collet <remi@remirepo.net> - 8.0.0-1
 - update to 8.0.0 GA
 
