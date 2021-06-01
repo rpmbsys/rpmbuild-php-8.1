@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.0.2
+Version: 8.0.6
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -215,7 +215,6 @@ Patch47: php-8.0.0-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug80682.patch
 
 # Security fixes (200+)
 
@@ -756,7 +755,6 @@ possibility to act as a socket server as well as a client.
 %patch49 -p1
 
 # upstream patches
-%patch100 -p1 -b .bug80682
 
 # security patches
 
@@ -1538,6 +1536,9 @@ exit 0
 %endif
 
 %changelog
+* Wed May  5 2021 Remi Collet <remi@remirepo.net> - 8.0.6-1
+- Update to 8.0.6 - http://www.php.net/releases/8_0_6.php
+
 * Tue Feb  2 2021 Remi Collet <remi@remirepo.net> - 8.0.2-1
 - Update to 8.0.2 - http://www.php.net/releases/8_0_2.php
 
