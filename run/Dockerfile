@@ -8,7 +8,7 @@ RUN yum -y install \
 
 COPY system/etc/yum.repos.d/bintray-custom.repo /etc/yum.repos.d/bintray-custom.repo
 
-RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php8custom --skip-broken install \
+RUN yum -y --enablerepo=bintray-custom --enablerepo=bintray-php8custom --setopt=skip_missing_names_on_install=False install \
         php-bcmath \
         php-cli \
         php-fpm \

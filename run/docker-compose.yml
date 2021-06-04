@@ -10,6 +10,13 @@ services:
     build:
       context: .
       args:
-        image: nodedev
         centos: $OS7
+        image: nodedev
     image: aursu/php80build:${OS7TAG}-devbase
+  centos7php80dev2base:
+    build:
+      context: .
+      args:
+        centos: $OS7
+        image: node16dev
+    image: aursu/php80build:${OS7TAG}-dev2base
