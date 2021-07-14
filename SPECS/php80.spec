@@ -110,7 +110,7 @@
 %global pdover      20170320
 # Extension version
 %global fileinfover 1.0.5
-%global zipver      1.19.2
+%global zipver      1.19.3
 
 # we don't want -z defs linker flag
 %undefine _strict_symbol_defs_build
@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.0.7
+Version: 8.0.8
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -215,7 +215,6 @@ Patch47: php-8.0.0-phpinfo.patch
 Patch49: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
-Patch100: php-net-snmp.patch
 
 # Security fixes (200+)
 
@@ -756,7 +755,6 @@ possibility to act as a socket server as well as a client.
 %patch49 -p1
 
 # upstream patches
-%patch100 -p1 -b .nodes
 
 # security patches
 
@@ -764,7 +762,7 @@ possibility to act as a socket server as well as a client.
 %patch300 -p1
 
 # Prevent %%doc confusion over LICENSE files
-cp Zend/LICENSE Zend/ZEND_LICENSE
+cp Zend/LICENSE ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
 cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
@@ -1411,7 +1409,7 @@ exit 0
 %if %{with_common}
 %files common
 %doc EXTENSIONS NEWS UPGRADING* README.REDIST.BINS *md docs
-%doc LICENSE TSRM_LICENSE libmagic_LICENSE timelib_LICENSE
+%doc LICENSE TSRM_LICENSE ZEND_LICENSE libmagic_LICENSE timelib_LICENSE
 %doc libmbfl_LICENSE
 %doc php.ini-*
 %config(noreplace) %{php_sysconfdir}/php.ini
@@ -1538,6 +1536,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Jun 29 2021 Remi Collet <remi@remirepo.net> - 8.0.8-1
+- Update to 8.0.8 - http://www.php.net/releases/8_0_8.php
+
 * Wed Jun  2 2021 Remi Collet <remi@remirepo.net> - 8.0.7-1
 - Update to 8.0.7 - http://www.php.net/releases/8_0_7.php
 - fix snmp extension for net-snmp without DES
