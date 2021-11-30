@@ -13,14 +13,14 @@ env:
     - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - BINTRAY_REPO=php8custom
     - OS7=7.9.2009
-    - OS8=8.3.2011
+    - OS8=8.4.2105
     - OS7TAG=7.9.2009
-    - OS8TAG=8.3.2011
+    - OS8TAG=8.4.2105
   jobs:
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php80base BUILD=centos7php80    UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php80base BUILD=centos7php80rel UPLOADER=centos7bintray
-    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php80base BUILD=centos8php80    UPLOADER=centos8bintray
-    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php80base BUILD=centos8php80rel UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php81base BUILD=centos7php81    UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.yml       BASE=centos7php81base BUILD=centos7php81rel UPLOADER=centos7bintray
+    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php81base BUILD=centos8php81    UPLOADER=centos8bintray
+    - BUILD_COMPOSE_FILE=docker-compose.el8.yml   BASE=centos8php81base BUILD=centos8php81rel UPLOADER=centos8bintray
 
 install:
   - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}

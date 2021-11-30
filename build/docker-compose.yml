@@ -1,8 +1,8 @@
 version: "3.5"
 services:
-  centos7php80build:
+  centos7php81build:
     build:
       context: .
       args:
         centos: $OS7
-    image: "aursu/php80build:${OS7TAG}-build"
+    image: "aursu/php81build:${OS7TAG}-build"

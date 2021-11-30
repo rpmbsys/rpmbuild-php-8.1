@@ -1,25 +1,25 @@
 version: "3.5"
 services:
-  centos8php80run:
+  centos8php81run:
     build:
       context: .
       dockerfile: Dockerfile.el8
       args:
         centos: $OS8
-    image: aursu/php80build:${OS8TAG}-runtime
-  centos8php80devbase:
+    image: aursu/php81build:${OS8TAG}-runtime
+  centos8php81devbase:
     build:
       context: .
       dockerfile: Dockerfile.el8
       args:
         image: nodedev
         centos: $OS8
-    image: aursu/php80build:${OS8TAG}-devbase
-  centos8php80dev2base:
+    image: aursu/php81build:${OS8TAG}-devbase
+  centos8php81dev2base:
     build:
       context: .
       dockerfile: Dockerfile.el8
       args:
         image: node16dev
         centos: $OS8
-    image: aursu/php80build:${OS8TAG}-dev2base
+    image: aursu/php81build:${OS8TAG}-dev2base

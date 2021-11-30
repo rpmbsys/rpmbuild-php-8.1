@@ -1,5 +1,5 @@
 ARG centos=7.9.2009
 ARG image=devbase
-FROM aursu/php80build:${centos}-${image}
+FROM aursu/php81build:${centos}-${image}
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

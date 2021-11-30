@@ -1,16 +1,16 @@
 version: "3.5"
 services:
-  centos7php80base:
+  centos7php81base:
     build:
       context: .
       dockerfile: Dockerfile.base
       args:
         centos: $OS7
-    image: "aursu/php80build:${OS7}-base"
-  centos8php80base:
+    image: "aursu/php81build:${OS7}-base"
+  centos8php81base:
     build:
       context: .
       dockerfile: Dockerfile.8-base
       args:
         centos: $OS8
-    image: "aursu/php80build:${OS8}-base"
+    image: "aursu/php81build:${OS8}-base"
