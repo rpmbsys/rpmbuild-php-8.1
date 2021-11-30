@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.0.8
+Version: 8.0.13
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -204,7 +204,7 @@ Patch9: php-7.0.7-curl.patch
 # Use system nikic/php-parser
 Patch41: php-8.0.0-parser.patch
 # use system tzdata
-Patch42: php-8.0.0-systzdata-v19.patch
+Patch42: php-8.0.10-systzdata-v20.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -212,7 +212,16 @@ Patch45: php-7.4.0-ldap_r.patch
 # drop "Configure command" from phpinfo output
 # and only use gcc (instead of full version)
 Patch47: php-8.0.0-phpinfo.patch
-Patch49: php-5.6.31-no-scan-dir-override.patch
+
+# add sha256 / sha512 security protocol, from 8.1
+Patch48: php-8.0.10-snmp-sha.patch
+# switch phar to use sha256 signature by default, from 8.1
+# implement openssl_256 and openssl_512 for phar signatures, from 8.1
+Patch49: php-8.0.10-phar-sha.patch
+# use system libxcrypt
+Patch51: php-8.0.13-crypt.patch
+
+Patch60: php-5.6.31-no-scan-dir-override.patch
 
 # Upstream fixes (100+)
 
@@ -255,6 +264,9 @@ BuildRequires: pkgconfig(libjpeg)
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(libwebp)
+%if 0%{?rhel} >= 8
+BuildRequires: pkgconfig(libxcrypt)
+%endif
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(oniguruma) >= 6.8
 BuildRequires: pkgconfig(sqlite3) >= 3.7.4
@@ -752,7 +764,12 @@ possibility to act as a socket server as well as a client.
 %patch43 -p1
 %patch45 -p1
 %patch47 -p1
-%patch49 -p1
+%patch48 -p1 -b .sha
+%patch49 -p1 -b .pharsha
+%if 0%{?rhel} >= 8
+%patch51 -p1 -b .libxcrypt
+%endif
+%patch60 -p1
 
 # upstream patches
 
@@ -937,6 +954,9 @@ ln -sf ../configure
     --with-config-file-path=%{php_sysconfdir} \
     --with-curl \
     --with-external-pcre \
+%if 0%{?rhel} >= 8
+    --with-external-libcrypt \
+%endif
     --with-freetype=%{_prefix} \
     --with-gettext \
     --with-imap \
@@ -1536,6 +1556,17 @@ exit 0
 %endif
 
 %changelog
+* Wed Nov 17 2021 Remi Collet <remi@remirepo.net> - 8.0.13-1
+- Update to 8.0.13 - http://www.php.net/releases/8_0_13.php
+- phar: switch to sha256 signature by default, backported from 8.1
+- phar: implement openssl_256 and openssl_512 for signatures, backported from 8.1
+- snmp: add sha256 / sha512 security protocol, backported from 8.1
+- adapt systzdata patch for timelib 2020.03 (v20)
+
+* Tue Oct 19 2021 Remi Collet <remi@remirepo.net> - 8.0.12-1
+- Update to 8.0.12 - http://www.php.net/releases/8_0_12.php
+- build using system libxcrypt
+
 * Tue Jun 29 2021 Remi Collet <remi@remirepo.net> - 8.0.8-1
 - Update to 8.0.8 - http://www.php.net/releases/8_0_8.php
 
