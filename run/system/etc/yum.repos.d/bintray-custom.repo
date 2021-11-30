@@ -10,7 +10,7 @@ module_hotfixes=true
 
 [bintray-php8custom]
 name=bintray-php8custom
-baseurl=https://rpmb.jfrog.io/artifactory/php8custom/centos/$releasever/
+baseurl=https://rpmb.jfrog.io/artifactory/php81custom/centos/$releasever/
 gpgcheck=0
 repo_gpgcheck=0
 enabled=0
