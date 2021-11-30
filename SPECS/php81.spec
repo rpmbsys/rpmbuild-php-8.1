@@ -105,8 +105,8 @@
 %global fpm_unit            %{fpm_service}.service
 %global fpm_logrotate       %{fpm_service}
 
-%global apiver      20200930
-%global zendver     20200930
+%global apiver      20210902
+%global zendver     20210902
 %global pdover      20170320
 # Extension version
 %global fileinfover 1.0.5
@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.0.13
+Version: 8.1.0
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -155,7 +155,8 @@ Release: %{rpmrel}%{?dist}
 # main/snprintf.c, main/spprintf.c and main/rfc1867.c are ASL 1.0
 # ext/date/lib is MIT
 # Zend/zend_sort is NCSA
-License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA
+# Zend/asm is Boost
+License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and Boost
 URL: http://www.php.net/
 
 Source0: http://www.php.net/distributions/php-%{version}.tar.xz
@@ -197,29 +198,21 @@ Source153: php81-20-ffi.ini
 # Build fixes
 Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
-Patch8: php-7.4.0-libdb.patch
+Patch8: php-8.1.0-libdb.patch
 Patch9: php-7.0.7-curl.patch
 
 # Functional changes
 # Use system nikic/php-parser
-Patch41: php-8.0.0-parser.patch
+Patch41: php-8.1.0-parser.patch
 # use system tzdata
-Patch42: php-8.0.10-systzdata-v20.patch
+Patch42: php-8.1.0-systzdata-v21.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-7.4.0-ldap_r.patch
 # drop "Configure command" from phpinfo output
 # and only use gcc (instead of full version)
-Patch47: php-8.0.0-phpinfo.patch
-
-# add sha256 / sha512 security protocol, from 8.1
-Patch48: php-8.0.10-snmp-sha.patch
-# switch phar to use sha256 signature by default, from 8.1
-# implement openssl_256 and openssl_512 for phar signatures, from 8.1
-Patch49: php-8.0.10-phar-sha.patch
-# use system libxcrypt
-Patch51: php-8.0.13-crypt.patch
+Patch47: php-8.1.0-phpinfo.patch
 
 Patch60: php-5.6.31-no-scan-dir-override.patch
 
@@ -253,7 +246,7 @@ BuildRequires: make
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
 %endif
-BuildRequires: openssl-devel >= 1.0.1
+BuildRequires: openssl-devel >= 1.0.2
 BuildRequires: perl
 BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(icu-i18n) >= 50.1
@@ -278,6 +271,7 @@ BuildRequires: %{?dtsprefix}systemtap-sdt-devel
 BuildRequires: unixODBC-devel
 # used for tests
 BuildRequires: %{_bindir}/ps
+BuildRequires: tzdata
 
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 Requires: httpd-mmn = %{_httpd_mmn}
@@ -507,11 +501,11 @@ Requires: autoconf
 Requires: krb5-devel%{?_isa}
 Requires: libxml2-devel%{?_isa}
 Requires: make
-Requires: openssl-devel%{?_isa} >= 1.0.1
+Requires: openssl-devel%{?_isa} >= 1.0.2
 Requires: pcre2-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
 %if 0%{?fedora} || 0%{?rhel} >= 8
-Recommends: php-nikic-php-parser4 >= 4.3.0
+Recommends: php-nikic-php-parser4 >= 4.13.0
 %endif
 
 %description devel
@@ -764,11 +758,7 @@ possibility to act as a socket server as well as a client.
 %patch43 -p1
 %patch45 -p1
 %patch47 -p1
-%patch48 -p1 -b .sha
-%patch49 -p1 -b .pharsha
-%if 0%{?rhel} >= 8
-%patch51 -p1 -b .libxcrypt
-%endif
+
 %patch60 -p1
 
 # upstream patches
@@ -781,6 +771,7 @@ possibility to act as a socket server as well as a client.
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE ZEND_LICENSE
 cp TSRM/LICENSE TSRM_LICENSE
+cp Zend/asm/LICENSE BOOST_LICENSE
 cp sapi/fpm/LICENSE fpm_LICENSE
 cp ext/mbstring/libmbfl/LICENSE libmbfl_LICENSE
 cp ext/fileinfo/libmagic/LICENSE libmagic_LICENSE
@@ -1556,6 +1547,10 @@ exit 0
 %endif
 
 %changelog
+* Wed Nov 24 2021 Remi Collet <remi@remirepo.net> - 8.1.0-1
+- update to 8.1.0 GA
+- bump API version
+
 * Wed Nov 17 2021 Remi Collet <remi@remirepo.net> - 8.0.13-1
 - Update to 8.0.13 - http://www.php.net/releases/8_0_13.php
 - phar: switch to sha256 signature by default, backported from 8.1
