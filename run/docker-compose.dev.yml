@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3"
 services:
   centos7php81dev:
     build:
@@ -6,7 +6,7 @@ services:
       args:
         centos: $OS7
     image: aursu/php81build:${OS7TAG}-dev
-  centos8php81dev:
+  stream8php81dev:
     build:
       context: dev
       args:
@@ -19,7 +19,7 @@ services:
         centos: $OS7
         image: dev2base
     image: aursu/php81build:${OS7TAG}-dev2
-  centos8php81dev2:
+  stream8php81dev2:
     build:
       context: dev
       args:

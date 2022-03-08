@@ -141,12 +141,12 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.1
+Version: 8.1.3
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -159,7 +159,7 @@ Release: %{rpmrel}%{?dist}
 License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and Boost
 URL: http://www.php.net/
 
-Source0: http://www.php.net/distributions/php-%{version}.tar.xz
+Source0: https://www.php.net/distributions/php-%{version}.tar.xz
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -172,7 +172,7 @@ Source12: php-fpm.wants
 Source13: nginx-fpm.conf
 Source14: nginx-php.conf
 Source15: php-cgi-fcgi.ini
-Source16: https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
+
 # See https://secure.php.net/gpg-keys.php
 Source20: https://www.php.net/distributions/php-keyring.gpg
 Source21: https://www.php.net/distributions/php-%{version}.tar.xz.asc
@@ -205,7 +205,7 @@ Patch9: php-7.0.7-curl.patch
 # Use system nikic/php-parser
 Patch41: php-8.1.0-parser.patch
 # use system tzdata
-Patch42: php-8.1.0-systzdata-v21.patch
+Patch42: php-8.1.0-systzdata-v22.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -459,16 +459,6 @@ Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
 %description cgi
 The php-cgi package contains the CGI interface executing
 PHP scripts, /usr/bin/php-cgi
-
-#%package ioncube
-#Summary: ionCube extension for PHP
-#
-#Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-
-#%description ioncube
-#ionCube Loader extensions for PHP. The ionCube
-#Loader is loaded as a PHP engine extension. This extension
-#transparently detects and loads encoded files.
 %endif
 
 %if %{with_fpm}
@@ -730,11 +720,6 @@ possibility to act as a socket server as well as a client.
 %{?gpgverify:%{gpgverify} --keyring='%{SOURCE20}' --signature='%{SOURCE21}' --data='%{SOURCE0}'}
 
 %setup -q -n php-%{version}
-
-#%if %{with_cgi}
-## ionCube Loader
-#%setup -q -n php-%{version} -T -D -a 16
-#%endif
 
 %patch1 -p1
 
@@ -1547,6 +1532,12 @@ exit 0
 %endif
 
 %changelog
+* Wed Feb 23 2022 Remi Collet <remi@remirepo.net> - 8.1.3-2
+- retrieve tzdata version #2056611
+
+* Wed Feb 16 2022 Remi Collet <remi@remirepo.net> - 8.1.3-1
+- Update to 8.1.3 - http://www.php.net/releases/8_1_3.php
+
 * Wed Dec 15 2021 Remi Collet <remi@remirepo.net> - 8.1.1-1
 - Update to 8.1.1 - http://www.php.net/releases/8_1_1.php
 

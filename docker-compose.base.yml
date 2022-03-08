@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3"
 services:
   centos7php81base:
     build:
@@ -7,7 +7,7 @@ services:
       args:
         centos: $OS7
     image: "aursu/php81build:${OS7}-base"
-  centos8php81base:
+  stream8php81base:
     build:
       context: .
       dockerfile: Dockerfile.8-base

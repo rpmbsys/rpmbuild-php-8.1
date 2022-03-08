@@ -1,8 +1,7 @@
-version: "3.5"
+version: "3"
 services:
   centos7php81:
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
@@ -11,7 +10,6 @@ services:
   centos7php81rel:
     command: ["-ba", "--with", "relocation"]
     volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
@@ -19,7 +17,5 @@ services:
         centos: $OS7
 
 volumes:
-  rpms:
-    name: rpms
   rpm7:
     name: rpm7
