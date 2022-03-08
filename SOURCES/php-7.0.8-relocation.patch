@@ -53,10 +53,10 @@ diff -rup php-7.0.8.orig/sapi/fpm/fpm/fpm_conf.c php-7.0.8/sapi/fpm/fpm/fpm_conf
  		}
  
  		if (!tmp) {
-diff -rup php-7.0.8.orig/sapi/fpm/fpm/fpm_env.h php-7.0.8/sapi/fpm/fpm/fpm_env.h
---- php-7.0.8.orig/sapi/fpm/fpm/fpm_env.h	2016-06-21 21:56:41.000000000 +0200
-+++ php-7.0.8/sapi/fpm/fpm/fpm_env.h	2016-07-21 17:42:16.650000000 +0200
-@@ -7,7 +7,7 @@
+diff -rup php-8.1.1.orig/sapi/fpm/fpm/fpm_env.h php-8.1.1/sapi/fpm/fpm/fpm_env.h
+--- php-8.1.1.orig/sapi/fpm/fpm/fpm_env.h	2021-12-15 02:00:45.000000000 +0000
++++ php-8.1.1/sapi/fpm/fpm/fpm_env.h	2022-02-28 11:42:56.085396004 +0000
+@@ -5,7 +5,7 @@
  
  #include "fpm_worker_pool.h"
  
@@ -64,7 +64,7 @@ diff -rup php-7.0.8.orig/sapi/fpm/fpm/fpm_env.h php-7.0.8/sapi/fpm/fpm/fpm_env.h
 +#define SETPROCTITLE_PREFIX "php81-fpm: "
  
  int fpm_env_init_child(struct fpm_worker_pool_s *wp);
- int fpm_env_init_main();
+ int fpm_env_init_main(void);
 diff -rup php-7.0.8.orig/sapi/fpm/fpm/fpm_main.c php-7.0.8/sapi/fpm/fpm/fpm_main.c
 --- php-7.0.8.orig/sapi/fpm/fpm/fpm_main.c	2016-06-21 21:56:41.000000000 +0200
 +++ php-7.0.8/sapi/fpm/fpm/fpm_main.c	2016-07-21 17:41:37.443000000 +0200
