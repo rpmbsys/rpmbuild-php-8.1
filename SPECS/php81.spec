@@ -141,12 +141,12 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.3
+Version: 8.1.6
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1532,6 +1532,9 @@ exit 0
 %endif
 
 %changelog
+* Wed May 11 2022 Remi Collet <remi@remirepo.net> - 8.1.6-1
+- Update to 8.1.6 - http://www.php.net/releases/8_1_6.php
+
 * Wed Feb 23 2022 Remi Collet <remi@remirepo.net> - 8.1.3-2
 - retrieve tzdata version #2056611
 
