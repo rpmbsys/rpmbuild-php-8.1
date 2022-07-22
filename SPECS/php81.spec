@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.6
+Version: 8.1.8
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -469,7 +469,6 @@ BuildRequires: libacl-devel
 BuildRequires: nginx-filesystem
 BuildRequires: pkgconfig(libsystemd) >= 209
 Requires: %{php_common}%{?_isa} = %{version}-%{baserel}
-Requires(pre): /usr/sbin/useradd
 # for /etc/nginx ownership
 Requires(pre): nginx-filesystem
 Requires: nginx-filesystem
@@ -1532,6 +1531,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Jul  6 2022 Remi Collet <remi@remirepo.net> - 8.1.8-1
+- Update to 8.1.8 - http://www.php.net/releases/8_1_8.php
+
 * Wed May 11 2022 Remi Collet <remi@remirepo.net> - 8.1.6-1
 - Update to 8.1.6 - http://www.php.net/releases/8_1_6.php
 
