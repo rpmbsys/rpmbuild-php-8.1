@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.8
+Version: 8.1.10
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -249,9 +249,9 @@ BuildRequires: nginx-filesystem
 BuildRequires: openssl-devel >= 1.0.2
 BuildRequires: perl
 BuildRequires: pkgconfig(freetype2)
-BuildRequires: pkgconfig(icu-i18n) >= 50.1
-BuildRequires: pkgconfig(icu-io)   >= 50.1
-BuildRequires: pkgconfig(icu-uc)   >= 50.1
+BuildRequires: pkgconfig(icu-i18n) >= 71
+BuildRequires: pkgconfig(icu-io)   >= 71
+BuildRequires: pkgconfig(icu-uc)   >= 71
 BuildRequires: pkgconfig(libcurl) >= 7.29.0
 BuildRequires: pkgconfig(libjpeg)
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
@@ -779,6 +779,10 @@ mkdir build-fpm
 rm ext/date/tests/timezone_location_get.phpt
 rm ext/date/tests/timezone_version_get.phpt
 rm ext/date/tests/timezone_version_get_basic1.phpt
+%if 0%{?fedora} < 36
+# need tzdata 2022b
+rm ext/date/tests/bug33415-2.phpt
+%endif
 # fails sometime
 rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
@@ -1531,6 +1535,13 @@ exit 0
 %endif
 
 %changelog
+* Thu Sep  1 2022 Remi Collet <remi@remirepo.net> - 8.1.10-1
+- Update to 8.1.10 - http://www.php.net/releases/8_1_10.php
+
+* Wed Aug 17 2022 Remi Collet <remi@remirepo.net> - 8.1.10~RC1-1
+- update to 8.1.10RC1
+- use ICU 71.1
+
 * Wed Jul  6 2022 Remi Collet <remi@remirepo.net> - 8.1.8-1
 - Update to 8.1.8 - http://www.php.net/releases/8_1_8.php
 
