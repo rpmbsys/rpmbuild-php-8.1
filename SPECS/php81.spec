@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.10
+Version: 8.1.13
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -1535,6 +1535,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Nov 22 2022 Remi Collet <remi@remirepo.net> - 8.1.13-1
+- Update to 8.1.13 - http://www.php.net/releases/8_1_13.php
+
 * Thu Sep  1 2022 Remi Collet <remi@remirepo.net> - 8.1.10-1
 - Update to 8.1.10 - http://www.php.net/releases/8_1_10.php
 
