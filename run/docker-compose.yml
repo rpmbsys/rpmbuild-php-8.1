@@ -11,12 +11,12 @@ services:
       context: .
       args:
         centos: $OS7
-        image: node16dev
+        image: node14dev
     image: aursu/php81build:${OS7TAG}-devbase
   centos7php81dev2base:
     build:
       context: .
       args:
         centos: $OS7
-        image: node18dev
+        image: node16dev
     image: aursu/php81build:${OS7TAG}-dev2base
