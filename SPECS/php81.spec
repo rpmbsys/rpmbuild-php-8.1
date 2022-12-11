@@ -141,7 +141,7 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -866,6 +866,11 @@ cat %{SOURCE53} > 20-ffi.ini
 %endif # if %{with_ffi}
 
 %build
+%if 0%{?rhel} >= 9
+# Disable LTO
+%define _lto_cflags %{nil}
+%endif
+
 # Set build date from https://reproducible-builds.org/specs/source-date-epoch/
 export SOURCE_DATE_EPOCH=$(date +%s -r NEWS)
 export PHP_UNAME=$(uname)
@@ -1535,6 +1540,9 @@ exit 0
 %endif
 
 %changelog
+* Sat Dec 10 2022 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.13-2
+- Disable LTO for CentOS 9 Stream
+
 * Tue Nov 22 2022 Remi Collet <remi@remirepo.net> - 8.1.13-1
 - Update to 8.1.13 - http://www.php.net/releases/8_1_13.php
 
