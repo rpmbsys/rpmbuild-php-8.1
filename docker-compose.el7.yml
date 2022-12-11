@@ -6,15 +6,15 @@ services:
     build:
       context: .
       args:
-        centos: $OS7
-  centos7php81rel:
+        os: $OS7
+  centos7php81reloc:
     command: ["-ba", "--with", "relocation"]
     volumes:
       - rpm7:/home/centos/rpmbuild/RPMS
     build:
       context: .
       args:
-        centos: $OS7
+        os: $OS7
 
 volumes:
   rpm7:

@@ -1,4 +1,4 @@
-ARG centos=7.9.2009
+ARG os=7.9.2009
 ARG image=devbase
 FROM aursu/php81build:${centos}-${image}
 

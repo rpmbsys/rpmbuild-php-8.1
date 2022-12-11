@@ -249,9 +249,9 @@ BuildRequires: nginx-filesystem
 BuildRequires: openssl-devel >= 1.0.2
 BuildRequires: perl
 BuildRequires: pkgconfig(freetype2)
-BuildRequires: pkgconfig(icu-i18n) >= 71
-BuildRequires: pkgconfig(icu-io)   >= 71
-BuildRequires: pkgconfig(icu-uc)   >= 71
+BuildRequires: pkgconfig(icu-i18n) >= 50.1
+BuildRequires: pkgconfig(icu-io)   >= 50.1
+BuildRequires: pkgconfig(icu-uc)   >= 50.1
 BuildRequires: pkgconfig(libcurl) >= 7.29.0
 BuildRequires: pkgconfig(libjpeg)
 BuildRequires: pkgconfig(libpcre2-8) >= 10.30
@@ -1543,7 +1543,6 @@ exit 0
 
 * Wed Aug 17 2022 Remi Collet <remi@remirepo.net> - 8.1.10~RC1-1
 - update to 8.1.10RC1
-- use ICU 71.1
 
 * Wed Jul  6 2022 Remi Collet <remi@remirepo.net> - 8.1.8-1
 - Update to 8.1.8 - http://www.php.net/releases/8_1_8.php

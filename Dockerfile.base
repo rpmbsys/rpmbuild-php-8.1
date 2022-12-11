@@ -1,43 +1,46 @@
-ARG centos=7.9.2009
-FROM aursu/rpmbuild:${centos}-build
+ARG os=8.7.20221112
+FROM aursu/rpmbuild:${os}-build
 
 USER root
-RUN yum -y install \
+RUN dnf -y install \
         bzip2-devel \
         cyrus-sasl-devel \
         freetype-devel \
         gdbm-devel \
         httpd-devel \
+        krb5-devel \
         libacl-devel \
         libcurl-devel \
         libedit-devel \
         libdb-devel \
         libffi-devel \
+        libicu-devel \
         libjpeg-turbo-devel \
         libpng-devel \
         libsodium-devel \
         libtidy-devel \
         libtool-ltdl-devel \
         libwebp-devel \
+        libxcrypt-devel \
         libxml2-devel \
         libxslt-devel \
+        libzip-devel \
         mysql-devel \
         nginx-filesystem \
+        oniguruma-devel \
         openldap-devel \
         openssl-devel \
+        pcre2-devel \
+        perl \
         postgresql-devel \
-        sendmail \
+        postfix \
         sqlite-devel \
         systemd-devel \
         systemtap-sdt-devel \
         unixODBC-devel \
-        uw-imap-devel \
         zlib-devel \
-    && yum clean all && rm -rf /var/cache/yum
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
-RUN yum -y --disablerepo=* --enablerepo=bintray-custom install \
-        libicu-devel \
-        "libzip-devel >= 1.5.1" \
-        pcre2-devel \
-        oniguruma-devel \
-    && yum clean all && rm -rf /var/cache/yum
+RUN dnf -y --enablerepo=bintray-custom install \
+        uw-imap-devel \
+    && dnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
