@@ -4,6 +4,10 @@ FROM aursu/centos:${centos}-${image}
 
 COPY system/etc/yum.repos.d/bintray-custom-stream.repo /etc/yum.repos.d/bintray-custom.repo
 
+RUN microdnf -y reinstall \
+        tzdata \
+    && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
+
 # EPEL repo contains php-pecl-igbinary and php-pecl-msgpack
 RUN microdnf -y install --enablerepo=crb \
         ImageMagick-libs \
