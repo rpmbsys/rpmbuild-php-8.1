@@ -141,12 +141,12 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 2
+%global rpmrel 1
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.13
+Version: 8.1.14
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -719,6 +719,9 @@ possibility to act as a socket server as well as a client.
 %{?gpgverify:%{gpgverify} --keyring='%{SOURCE20}' --signature='%{SOURCE21}' --data='%{SOURCE0}'}
 
 %setup -q -n php-%{version}
+
+# Corrupted MacOS archive
+find . -name '._*' -delete
 
 %patch1 -p1
 
@@ -1540,6 +1543,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Jan  4 2023 Remi Collet <remi@remirepo.net> - 8.1.14-1
+- Update to 8.1.14 - http://www.php.net/releases/8_1_14.php
+
 * Sat Dec 10 2022 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.13-2
 - Disable LTO for CentOS 9 Stream
 
