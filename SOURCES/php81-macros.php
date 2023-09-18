@@ -14,4 +14,8 @@
 
 %__php         %{_bindir}/php81
 
+%__phpize      %{_bindir}/phpize81
+
+%__phpconfig    %{_bindir}/php81-config
+
 %pecl_xmldir   %{_sharedstatedir}/php81/peclxml

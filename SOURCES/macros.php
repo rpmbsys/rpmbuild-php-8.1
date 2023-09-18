@@ -14,4 +14,8 @@
 
 %__php         %{_bindir}/php
 
+%__phpize      %{_bindir}/phpize
+
+%__phpconfig    %{_bindir}/php-config
+
 %pecl_xmldir   %{_sharedstatedir}/php/peclxml
