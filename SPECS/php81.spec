@@ -146,7 +146,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.14
+Version: 8.1.25
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -205,7 +205,7 @@ Patch9: php-7.0.7-curl.patch
 # Use system nikic/php-parser
 Patch41: php-8.1.0-parser.patch
 # use system tzdata
-Patch42: php-8.1.0-systzdata-v22.patch
+Patch42: php-8.1.0-systzdata-v23.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -236,7 +236,6 @@ BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
 BuildRequires: libacl-devel
-BuildRequires: libc-client-devel
 BuildRequires: libdb-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
@@ -347,8 +346,6 @@ Provides: php-gettext, php-gettext%{?_isa}
 Provides: php-hash, php-hash%{?_isa}
 # This extension is enabled by default
 Provides: php-iconv, php-iconv%{?_isa}
-# To get these functions to work, you have to compile PHP with --with-imap
-Provides: php-imap, php-imap%{?_isa}
 # extension may be installed using the bundled version as of PHP 5.3.0, --enable-intl will enable the bundled version
 Provides: php-intl, php-intl%{?_isa}
 # As of PHP 5.2.0, the JSON extension is bundled and compiled into PHP by default
@@ -946,8 +943,6 @@ ln -sf ../configure
 %endif
     --with-freetype=%{_prefix} \
     --with-gettext \
-    --with-imap \
-    --with-imap-ssl \
     --with-jpeg=%{_prefix} \
     --with-kerberos \
     --with-layout=GNU \
@@ -1543,6 +1538,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Oct 25 2023 Remi Collet <remi@remirepo.net> - 8.1.25-1
+- Update to 8.1.25 - http://www.php.net/releases/8_1_25.php
+
 * Wed Jan  4 2023 Remi Collet <remi@remirepo.net> - 8.1.14-1
 - Update to 8.1.14 - http://www.php.net/releases/8_1_14.php
 
