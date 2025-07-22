@@ -759,7 +759,7 @@ find . -name '._*' -delete
 %patch -P46 -p1 -b .argon2
 %patch -P47 -p1 -b .phpinfo
 
-%patch -P610 -p1
+%patch -P60 -p1
 
 # upstream patches
 
@@ -871,8 +871,8 @@ cat %{SOURCE50} > 10-opcache.ini
 # according to https://forum.remirepo.net/viewtopic.php?pid=8407#p8407
 %ifarch x86_64
 sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
-%endif # ifarch x86_64
-%endif # if %{with_opcache}
+%endif
+%endif
 
 %if %{with_ffi}
 %if %{with_relocation}
@@ -880,7 +880,7 @@ cat %{SOURCE153} > 20-ffi.ini
 %else
 cat %{SOURCE53} > 20-ffi.ini
 %endif
-%endif # if %{with_ffi}
+%endif
 
 %build
 %if 0%{?rhel} >= 9
