@@ -126,6 +126,8 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 %endif
 
+%bcond_without        imap
+
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
 %global isasuffix -%{__isa_bits}
@@ -146,7 +148,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.25
+Version: 8.1.28
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -199,17 +201,22 @@ Source153: php81-20-ffi.ini
 Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
 Patch8: php-8.1.0-libdb.patch
-Patch9: php-7.0.7-curl.patch
+# For libxml 2.12 from 8.1
+Patch9: php-8.1.27-libxml212.patch
+# RHEL backports
+Patch10: php-7.0.7-curl.patch
 
 # Functional changes
 # Use system nikic/php-parser
 Patch41: php-8.1.0-parser.patch
 # use system tzdata
-Patch42: php-8.1.0-systzdata-v23.patch
+Patch42: php-8.1.0-systzdata-v24.patch
 # See http://bugs.php.net/53436
 Patch43: php-7.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-7.4.0-ldap_r.patch
+# Ignore unsupported "threads" option on password_hash
+Patch46: php-8.0.7-argon2.patch
 # drop "Configure command" from phpinfo output
 # and only use gcc (instead of full version)
 Patch47: php-8.1.0-phpinfo.patch
@@ -223,6 +230,7 @@ Patch60: php-5.6.31-no-scan-dir-override.patch
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
 Patch300: php-7.4.0-datetests.patch
+Patch301: php-8.1.27-zlib-tests.patch
 
 # relocation (400+)
 Patch405: php81-php-7.2.0-includedir.patch
@@ -236,6 +244,7 @@ BuildRequires: gcc-c++
 BuildRequires: gdbm-devel
 BuildRequires: httpd-devel >= 2.4
 BuildRequires: libacl-devel
+BuildRequires: libc-client-devel
 BuildRequires: libdb-devel
 BuildRequires: libstdc++-devel
 BuildRequires: libtool >= 1.4.3
@@ -346,6 +355,10 @@ Provides: php-gettext, php-gettext%{?_isa}
 Provides: php-hash, php-hash%{?_isa}
 # This extension is enabled by default
 Provides: php-iconv, php-iconv%{?_isa}
+%if %{with imap}
+# To get these functions to work, you have to compile PHP with --with-imap
+Provides: php-imap, php-imap%{?_isa}
+%endif
 # extension may be installed using the bundled version as of PHP 5.3.0, --enable-intl will enable the bundled version
 Provides: php-intl, php-intl%{?_isa}
 # As of PHP 5.2.0, the JSON extension is bundled and compiled into PHP by default
@@ -720,37 +733,41 @@ possibility to act as a socket server as well as a client.
 # Corrupted MacOS archive
 find . -name '._*' -delete
 
-%patch1 -p1
+%patch -P1 -p1 -b .mpmcheck
 
 %if %{with_relocation}
-%patch405 -p1
+%patch -P405 -p1
 %else
-%patch5 -p1
+%patch -P5 -p1 -b .includedir
 %endif
 
-%patch8 -p1
-%if 0%{?rhel}
-%patch9 -p1
+%patch -P8 -p1 -b .libdb
+%patch -P9 -p1 -b .libxml212
+
+%if 0%{?rhel} == 7
+%patch -P10 -p1 -b .curltls
 %endif
 
 %if %{with_relocation}
-%patch409 -p1
+%patch -P409 -p1
 %endif
 
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch45 -p1
-%patch47 -p1
+%patch -P41 -p1 -b .syslib
+%patch -P42 -p1 -b .systzdata
+%patch -P43 -p1 -b .headers
+%patch -P45 -p1 -b .ldap_r
+%patch -P46 -p1 -b .argon2
+%patch -P47 -p1 -b .phpinfo
 
-%patch60 -p1
+%patch -P610 -p1
 
 # upstream patches
 
 # security patches
 
 # Fixes for tests
-%patch300 -p1
+%patch -P300 -p1 -b .datetests
+%patch -P301 -p1 -b .zlibng
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE ZEND_LICENSE
@@ -943,6 +960,10 @@ ln -sf ../configure
 %endif
     --with-freetype=%{_prefix} \
     --with-gettext \
+%if %{with imap}
+    --with-imap \
+    --with-imap-ssl \
+%endif
     --with-jpeg=%{_prefix} \
     --with-kerberos \
     --with-layout=GNU \
@@ -1538,8 +1559,10 @@ exit 0
 %endif
 
 %changelog
-* Wed Oct 25 2023 Remi Collet <remi@remirepo.net> - 8.1.25-1
-- Update to 8.1.25 - http://www.php.net/releases/8_1_25.php
+* Wed Apr 10 2024 Remi Collet <remi@remirepo.net> - 8.1.28-1
+- Update to 8.1.28 - http://www.php.net/releases/8_1_28.php
+- patch test suite for zlib-ng
+- add fixes for libxml 2.12 from 8.2
 
 * Wed Jan  4 2023 Remi Collet <remi@remirepo.net> - 8.1.14-1
 - Update to 8.1.14 - http://www.php.net/releases/8_1_14.php

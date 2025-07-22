@@ -24,4 +24,3 @@
 %__phpconfig    %{_bindir}/php-config
 %__ztsphpconfig %{_bindir}/zts-php-config
 
-%pecl_xmldir   %{_sharedstatedir}/php/peclxml

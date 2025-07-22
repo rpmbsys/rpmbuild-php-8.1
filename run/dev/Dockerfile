@@ -1,4 +1,4 @@
-ARG os=7.9.2009
+ARG os=9.6.20250531
 ARG image=devbase
 FROM aursu/php81build:${os}-${image}
 

@@ -9,8 +9,6 @@ env:
   BINTRAY_REPO: php81custom
   RL9: 9.6.20250531
   RL9TAG: 9.6.20250531
-  RL10: 10.0.20250606
-  RL10TAG: 10.0.20250606
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,16 +16,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - compose-file: docker-compose.rl9.yml
+          - compose-file: docker-compose.yml
             base: rocky9php81base
             build: rocky9php81
             uploader: rocky9bintray
             repo_path: rocky/9
-          - compose-file: docker-compose.rl10.yml
-            base: rocky10php81base
-            build: rocky10php81
-            uploader: rocky10bintray
-            repo_path: rocky/10
     env:
       BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
       BASE: ${{ matrix.base }}
@@ -48,7 +41,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
       - run: docker-compose -f build/docker-compose.yml build --no-cache --pull
@@ -60,9 +53,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compose-file: [run/docker-compose.rl9.yml, run/docker-compose.rl10.yml]
+        compose-file: [run/docker-compose.yml]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
       - run: docker-compose -f ${{ matrix.compose-file }} build --no-cache --pull
@@ -76,7 +69,7 @@ jobs:
       matrix:
         compose-file: [run/docker-compose.dev.yml]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
       - run: docker-compose -f ${{ matrix.compose-file }} build --no-cache --pull
