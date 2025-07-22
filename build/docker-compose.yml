@@ -3,5 +3,5 @@ services:
     build:
       context: .
       args:
-        centos: $RL9
+        rocky: $RL9
     image: "aursu/php81build:${RL9TAG}-build"

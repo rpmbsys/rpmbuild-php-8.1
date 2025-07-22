@@ -1,4 +1,4 @@
-ARG rocky=8.7.20221112
+ARG rocky=9.6.20250531
 FROM aursu/rpmbuild:${rocky}-build
 
 USER root
