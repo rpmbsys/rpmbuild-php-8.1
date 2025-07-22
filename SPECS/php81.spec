@@ -148,7 +148,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.28
+Version: 8.1.33
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -201,10 +201,6 @@ Source153: php81-20-ffi.ini
 Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
 Patch8: php-8.1.0-libdb.patch
-# For libxml 2.12 from 8.1
-Patch9: php-8.1.27-libxml212.patch
-# RHEL backports
-Patch10: php-7.0.7-curl.patch
 
 # Functional changes
 # Use system nikic/php-parser
@@ -230,7 +226,10 @@ Patch60: php-5.6.31-no-scan-dir-override.patch
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
 Patch300: php-7.4.0-datetests.patch
+# for zlib-ng
 Patch301: php-8.1.27-zlib-tests.patch
+# for pcre2 10.45
+Patch302: php-8.1.32-pcretests.patch
 
 # relocation (400+)
 Patch405: php81-php-7.2.0-includedir.patch
@@ -742,11 +741,6 @@ find . -name '._*' -delete
 %endif
 
 %patch -P8 -p1 -b .libdb
-%patch -P9 -p1 -b .libxml212
-
-%if 0%{?rhel} == 7
-%patch -P10 -p1 -b .curltls
-%endif
 
 %if %{with_relocation}
 %patch -P409 -p1
@@ -768,6 +762,7 @@ find . -name '._*' -delete
 # Fixes for tests
 %patch -P300 -p1 -b .datetests
 %patch -P301 -p1 -b .zlibng
+%patch -P302 -p1 -b .pcretests
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE ZEND_LICENSE
@@ -1559,6 +1554,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Jul  2 2025 Remi Collet <remi@remirepo.net> - 8.1.33-1
+- Update to 8.1.33 - http://www.php.net/releases/8_1_33.php
+
 * Wed Apr 10 2024 Remi Collet <remi@remirepo.net> - 8.1.28-1
 - Update to 8.1.28 - http://www.php.net/releases/8_1_28.php
 - patch test suite for zlib-ng
