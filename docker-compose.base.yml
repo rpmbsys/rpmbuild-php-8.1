@@ -6,3 +6,10 @@ services:
       args:
         os: $RL9
     image: "aursu/php81build:${RL9TAG}-base"
+  rocky10php81base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+      args:
+        os: $RL10
+    image: "aursu/php81build:${RL10TAG}-base"

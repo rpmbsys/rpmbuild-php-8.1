@@ -5,3 +5,9 @@ services:
       args:
         rocky: $RL9
     image: "aursu/php81build:${RL9TAG}-build"
+  rocky10build:
+    build:
+      context: .
+      args:
+        rocky: $RL10
+    image: "aursu/php81build:${RL10TAG}-build"
