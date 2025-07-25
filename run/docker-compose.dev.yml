@@ -1,11 +1,17 @@
 services:
-  rocky9php81dev:
+  rocky10dev:
+    build:
+      context: dev
+      args:
+        os: $RL10
+    image: "aursu/php81build:${RL10TAG}-dev"
+  rocky9dev:
     build:
       context: dev
       args:
         os: $RL9
     image: "aursu/php81build:${RL9TAG}-dev"
-  rocky9php81dev2:
+  rocky9dev2:
     build:
       context: dev
       args:

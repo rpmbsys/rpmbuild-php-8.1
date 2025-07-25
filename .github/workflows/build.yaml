@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compose-file: [run/docker-compose.yml]
+        compose-file: [run/docker-compose.yml, run/docker-compose.RL9.yml]
     steps:
       - uses: actions/checkout@v3
         with:
