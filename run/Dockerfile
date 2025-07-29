@@ -3,19 +3,22 @@ ARG image=web
 FROM aursu/rockylinux:${rocky}-${image}
 
 COPY system/etc/yum.repos.d/bintray-custom-rocky.repo /etc/yum.repos.d/bintray-custom.repo
-
+    
 RUN microdnf -y --enablerepo=bintray-custom --enablerepo=bintray-phpcustom install \
+        ImageMagick-libs \
         php-bcmath-8.1.33 \
         php-cli-8.1.33 \
         php-fpm-8.1.33 \
         php-opcache-8.1.33 \
         php-pecl-apcu \
         php-pecl-geoip \
-        php-pecl-imagick \
         php-pecl-memcached \
         php-pecl-redis6 \
         php-sodium-8.1.33 \
         php-xml-8.1.33 \
+        tzdata \
+    && microdnf -y --disablerepo=epel --enablerepo=bintray-phpcustom install \
+        php-pecl-imagick \
     && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
 
 # php-fpm configuration
