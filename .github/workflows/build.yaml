@@ -68,7 +68,7 @@ jobs:
         with:
           submodules: true
       - run: docker compose -f ${{ matrix.compose-file }} build --no-cache --pull
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker login ghcr.io -u $DOCKER_USER -p $DOCKER_PASS
       - run: docker compose -f ${{ matrix.compose-file }} push
   dev:
     needs: runtime
@@ -84,5 +84,5 @@ jobs:
         with:
           submodules: true
       - run: docker compose -f ${{ matrix.compose-file }} build --no-cache --pull
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker login ghcr.io -u $DOCKER_USER -p $DOCKER_PASS
       - run: docker compose -f ${{ matrix.compose-file }} push
