@@ -13,7 +13,7 @@ RUN microdnf -y --enablerepo=bintray-custom --enablerepo=bintray-phpcustom insta
         php-pecl-geoip \
         php-pecl-imagick \
         php-pecl-memcached \
-        php-pecl-redis5 \
+        php-pecl-redis6 \
         php-sodium-8.1.33 \
         php-xml-8.1.33 \
     && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*

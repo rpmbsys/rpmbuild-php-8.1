@@ -28,7 +28,7 @@ RUN microdnf -y --disablerepo=epel \
         php-pecl-geoip \
         php-pecl-imagick \
         php-pecl-memcached \
-        php-pecl-redis5 \
+        php-pecl-redis6 \
         php-sodium \
         php-xml \
     && microdnf clean all && rm -rf /var/cache/dnf /var/lib/rpm/__db*
