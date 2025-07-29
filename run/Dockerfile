@@ -1,6 +1,6 @@
 ARG rocky=10.0.20250606
 ARG image=web
-FROM aursu/rockylinux:${rocky}-${image}
+FROM ghcr.io/aursu/rockylinux:${rocky}-${image}
 
 COPY system/etc/yum.repos.d/bintray-custom-rocky.repo /etc/yum.repos.d/bintray-custom.repo
     
