@@ -61,6 +61,8 @@ jobs:
     strategy:
       matrix:
         compose-file: [run/docker-compose.yml, run/docker-compose.RL9.yml]
+    env:
+      DOCKER_PASS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -75,6 +77,8 @@ jobs:
     strategy:
       matrix:
         compose-file: [run/docker-compose.dev.yml]
+    env:
+      DOCKER_PASS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
