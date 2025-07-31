@@ -4,7 +4,7 @@ services:
       context: .
       args:
         rocky: $RL10
-    image: "ghcr.io/rpmbsys/php81build:${RL10TAG}-runtime"
+    image: "ghcr.io/rpmbsys/php81build:${RL10TAG}-${RUNTAG}"
   rocky10devbase:
     build:
       context: .
