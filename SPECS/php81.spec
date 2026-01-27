@@ -148,7 +148,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{php_main}
-Version: 8.1.33
+Version: 8.1.34
 Release: %{rpmrel}%{?dist}
 
 # All files licensed under PHP version 3.01, except
@@ -201,6 +201,8 @@ Source153: php81-20-ffi.ini
 Patch1: php-7.4.0-httpd.patch
 Patch5: php-7.2.0-includedir.patch
 Patch8: php-8.1.0-libdb.patch
+# Fix for bash 5.3
+Patch13: php-7.4.33-bash53.patch
 
 # Functional changes
 # Use system nikic/php-parser
@@ -741,6 +743,7 @@ find . -name '._*' -delete
 %endif
 
 %patch -P8 -p1 -b .libdb
+%patch -P13 -p1 -b .bash53
 
 %if %{with_relocation}
 %patch -P409 -p1
@@ -1555,6 +1558,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Dec 17 2025 Remi Collet <remi@remirepo.net> - 8.1.34-1
+- Update to 8.1.34 - http://www.php.net/releases/8_1_34.php
+
 * Wed Jul  2 2025 Remi Collet <remi@remirepo.net> - 8.1.33-1
 - Update to 8.1.33 - http://www.php.net/releases/8_1_33.php
 
