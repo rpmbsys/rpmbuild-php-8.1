@@ -143,7 +143,7 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 1
+%global rpmrel 2
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -224,6 +224,8 @@ Patch60: php-5.6.31-no-scan-dir-override.patch
 # Upstream fixes (100+)
 
 # Security fixes (200+)
+# GHSA-w8hw-w9fx-j79w (CVE-2026-109618), GHSA-6wmf-4rv5-p3rp (CVE-2026-109619)
+Patch200: php-8.1.34-0004-Avoid-state-corruption-via-bailout.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
@@ -761,6 +763,7 @@ find . -name '._*' -delete
 # upstream patches
 
 # security patches
+%patch -P200 -p1 -b .cve109618
 
 # Fixes for tests
 %patch -P300 -p1 -b .datetests
@@ -1558,6 +1561,11 @@ exit 0
 %endif
 
 %changelog
+* Thu Oct 22 2026 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.34-2
+- Avoid state corruption via bailout
+  Fix GHSA-w8hw-w9fx-j79w (CVE-2026-109618)
+  Fix GHSA-6wmf-4rv5-p3rp (CVE-2026-109619)
+
 * Wed Dec 17 2025 Remi Collet <remi@remirepo.net> - 8.1.34-1
 - Update to 8.1.34 - http://www.php.net/releases/8_1_34.php
 
