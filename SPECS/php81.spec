@@ -143,7 +143,7 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 2
+%global rpmrel 3
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -226,6 +226,34 @@ Patch60: php-5.6.31-no-scan-dir-override.patch
 # Security fixes (200+)
 # GHSA-w8hw-w9fx-j79w (CVE-2026-109618), GHSA-6wmf-4rv5-p3rp (CVE-2026-109619)
 Patch200: php-8.1.34-0004-Avoid-state-corruption-via-bailout.patch
+# GHSA-5j3f-64r7-f564 (CVE-2026-129538)
+Patch201: php-8.1.34-0005-Fix-GHSA-5j3f-64r7-f564-PATH_INFO-underflow-in-CGI-i.patch
+# GHSA-gr4f-wgx5-jpfv (CVE-2026-129496)
+Patch202: php-8.1.34-0006-Fix-GHSA-gr4f-wgx5-jpfv-DATEG-tzcache-use-after-free.patch
+# GHSA-qc49-hpvq-g2w6 (CVE-2026-129289)
+Patch203: php-8.1.34-0007-Fix-GHSA-qc49-hpvq-g2w6-Drain-unread-request-bodies.patch
+# GHSA-7qg2-v9fj-4mwv (CVE-2026-6735)
+Patch204: php-8.1.34-0008-GHSA-7qg2-v9fj-4mwv-fpm-XSS-within-status-endpoint.patch
+# GHSA-3mg3-cr28-46gc (CVE-2026-129292)
+Patch205: php-8.1.34-0009-Fix-GHSA-3mg3-cr28-46gc-FPM-XSS-within-status-endpoi.patch
+# GHSA-jm4m-qfqx-967m (CVE-2026-129291)
+Patch206: php-8.1.34-0010-Fix-GHSA-jm4m-qfqx-967m-FPM-worker-stdio-pipe-fd-clo.patch
+# GHSA-68fq-fh7h-f8gr (CVE-2026-128090)
+Patch207: php-8.1.34-0011-Fix-GHSA-68fq-fh7h-f8gr-refuse-keyless-phar-signatur.patch
+# GHSA-fm2m-fjf5-v3cp (CVE-2026-126714)
+Patch208: php-8.1.34-0012-Fix-GHSA-fm2m-fjf5-v3cp-RCE-via-corrupted-session-fi.patch
+# GHSA-658j-r8rw-q6mx (CVE-2026-115560)
+Patch209: php-8.1.34-0013-Fix-GHSA-658j-r8rw-q6mx-session.upload_progress.enab.patch
+# GHSA-q23r-hr55-xmpg (CVE-2026-15353)
+Patch210: php-8.1.34-0014-Fix-GHSA-q23r-hr55-xmpg-out-of-bounds-read-on-empty-.patch
+# GHSA-rgrp-mwpx-f6rm (CVE-2026-91765)
+Patch211: php-8.1.34-0015-Fix-GHSA-rgrp-mwpx-f6rm-unbounded-recursion-in-ext-s.patch
+# GHSA-4646-p932-gw34 (CVE-2026-129506)
+Patch212: php-8.1.34-0016-Fix-GHSA-4646-p932-gw34-keep-SOAP-DTD-alive-during-c.patch
+# GHSA-f6gg-rchx-xw8j (CVE-2026-128064)
+Patch213: php-8.1.34-0017-Fix-GHSA-f6gg-rchx-xw8j-mixed-case-HTTPS-and-FTPS.patch
+# GHSA-mmf9-xm3v-hg2x (CVE-2026-127960)
+Patch214: php-8.1.34-0018-Fix-GHSA-mmf9-xm3v-hg2x-quadratic-folded-header-conc.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
@@ -764,6 +792,20 @@ find . -name '._*' -delete
 
 # security patches
 %patch -P200 -p1 -b .cve109618
+%patch -P201 -p1 -b .cve129538
+%patch -P202 -p1 -b .cve129496
+%patch -P203 -p1 -b .cve129289
+%patch -P204 -p1 -b .cve6735
+%patch -P205 -p1 -b .cve129292
+%patch -P206 -p1 -b .cve129291
+%patch -P207 -p1 -b .cve128090
+%patch -P208 -p1 -b .cve126714
+%patch -P209 -p1 -b .cve115560
+%patch -P210 -p1 -b .cve15353
+%patch -P211 -p1 -b .cve91765
+%patch -P212 -p1 -b .cve129506
+%patch -P213 -p1 -b .cve128064
+%patch -P214 -p1 -b .cve127960
 
 # Fixes for tests
 %patch -P300 -p1 -b .datetests
@@ -1561,6 +1603,36 @@ exit 0
 %endif
 
 %changelog
+* Thu Nov 19 2026 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.34-3
+- PHP-CGI out-of-bounds read and write during PATH_INFO correction
+  Fix GHSA-5j3f-64r7-f564 (CVE-2026-129538)
+- Timezone cache use-after-free can lead to remote code execution
+  Fix GHSA-gr4f-wgx5-jpfv (CVE-2026-129496)
+- PHP-FPM request smuggling through an unread HTTP request body
+  Fix GHSA-qc49-hpvq-g2w6 (CVE-2026-129289)
+- PHP-FPM XSS within status endpoint
+  Fix GHSA-7qg2-v9fj-4mwv (CVE-2026-6735)
+- PHP-FPM status endpoint XSS via unescaped user and script fields
+  Fix GHSA-3mg3-cr28-46gc (CVE-2026-129292)
+- PHP-FPM worker stdio pipe fd closed twice (local privilege escalation)
+  Fix GHSA-jm4m-qfqx-967m (CVE-2026-129291)
+- PHAR OpenSSL signature bypass via algorithm downgrade
+  Fix GHSA-68fq-fh7h-f8gr (CVE-2026-128090)
+- Partially overwritten session files can lead to remote code execution
+  Fix GHSA-fm2m-fjf5-v3cp (CVE-2026-126714)
+- Session serializer mismatch: session.upload_progress.enabled is now off by default
+  Fix GHSA-658j-r8rw-q6mx (CVE-2026-115560)
+- SOAP information disclosure through malformed array dimensions
+  Fix GHSA-q23r-hr55-xmpg (CVE-2026-15353)
+- SOAP unbounded recursion in cleanup_xml_node()
+  Fix GHSA-rgrp-mwpx-f6rm (CVE-2026-91765)
+- SOAP use-after-free when processing DTD entity references
+  Fix GHSA-4646-p932-gw34 (CVE-2026-129506)
+- Mixed-case HTTPS and FTPS URLs can expose data in plaintext
+  Fix GHSA-f6gg-rchx-xw8j (CVE-2026-128064)
+- Denial of service through folded HTTP response headers
+  Fix GHSA-mmf9-xm3v-hg2x (CVE-2026-127960)
+
 * Thu Oct 22 2026 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.34-2
 - Avoid state corruption via bailout
   Fix GHSA-w8hw-w9fx-j79w (CVE-2026-109618)
