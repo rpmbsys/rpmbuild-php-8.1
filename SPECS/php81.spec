@@ -143,7 +143,7 @@
 %bcond_without         dtrace
 %bcond_without         zip
 
-%global rpmrel 3
+%global rpmrel 4
 %global baserel %{rpmrel}%{?dist}
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -224,36 +224,39 @@ Patch60: php-5.6.31-no-scan-dir-override.patch
 # Upstream fixes (100+)
 
 # Security fixes (200+)
-# GHSA-w8hw-w9fx-j79w (CVE-2026-109618), GHSA-6wmf-4rv5-p3rp (CVE-2026-109619)
-Patch200: php-8.1.34-0004-Avoid-state-corruption-via-bailout.patch
-# GHSA-5j3f-64r7-f564 (CVE-2026-129538)
-Patch201: php-8.1.34-0005-Fix-GHSA-5j3f-64r7-f564-PATH_INFO-underflow-in-CGI-i.patch
-# GHSA-gr4f-wgx5-jpfv (CVE-2026-129496)
-Patch202: php-8.1.34-0006-Fix-GHSA-gr4f-wgx5-jpfv-DATEG-tzcache-use-after-free.patch
-# GHSA-qc49-hpvq-g2w6 (CVE-2026-129289)
-Patch203: php-8.1.34-0007-Fix-GHSA-qc49-hpvq-g2w6-Drain-unread-request-bodies.patch
-# GHSA-7qg2-v9fj-4mwv (CVE-2026-6735)
-Patch204: php-8.1.34-0008-GHSA-7qg2-v9fj-4mwv-fpm-XSS-within-status-endpoint.patch
-# GHSA-3mg3-cr28-46gc (CVE-2026-129292)
-Patch205: php-8.1.34-0009-Fix-GHSA-3mg3-cr28-46gc-FPM-XSS-within-status-endpoi.patch
-# GHSA-jm4m-qfqx-967m (CVE-2026-129291)
-Patch206: php-8.1.34-0010-Fix-GHSA-jm4m-qfqx-967m-FPM-worker-stdio-pipe-fd-clo.patch
-# GHSA-68fq-fh7h-f8gr (CVE-2026-128090)
-Patch207: php-8.1.34-0011-Fix-GHSA-68fq-fh7h-f8gr-refuse-keyless-phar-signatur.patch
-# GHSA-fm2m-fjf5-v3cp (CVE-2026-126714)
-Patch208: php-8.1.34-0012-Fix-GHSA-fm2m-fjf5-v3cp-RCE-via-corrupted-session-fi.patch
-# GHSA-658j-r8rw-q6mx (CVE-2026-115560)
-Patch209: php-8.1.34-0013-Fix-GHSA-658j-r8rw-q6mx-session.upload_progress.enab.patch
-# GHSA-q23r-hr55-xmpg (CVE-2026-15353)
-Patch210: php-8.1.34-0014-Fix-GHSA-q23r-hr55-xmpg-out-of-bounds-read-on-empty-.patch
-# GHSA-rgrp-mwpx-f6rm (CVE-2026-91765)
-Patch211: php-8.1.34-0015-Fix-GHSA-rgrp-mwpx-f6rm-unbounded-recursion-in-ext-s.patch
-# GHSA-4646-p932-gw34 (CVE-2026-129506)
-Patch212: php-8.1.34-0016-Fix-GHSA-4646-p932-gw34-keep-SOAP-DTD-alive-during-c.patch
-# GHSA-f6gg-rchx-xw8j (CVE-2026-128064)
-Patch213: php-8.1.34-0017-Fix-GHSA-f6gg-rchx-xw8j-mixed-case-HTTPS-and-FTPS.patch
-# GHSA-mmf9-xm3v-hg2x (CVE-2026-127960)
-Patch214: php-8.1.34-0018-Fix-GHSA-mmf9-xm3v-hg2x-quadratic-folded-header-conc.patch
+# Backported from 8.2 by remirepo (php81 8.1.34-7, git.remirepo.net rpms/php/php81.git)
+# GHSA-w476-322c-wpvm (CVE-2025-14179) pdo_firebird SQL injection via NUL bytes
+Patch200: php-cve-2025-14179.patch
+# GHSA-85c2-q967-79q5 (CVE-2026-6722) soap stale ref_map pointer with Apache Map
+Patch201: php-cve-2026-6722.patch
+# GHSA-m33r-qmcv-p97q (CVE-2026-7261) soap use-after-free, SOAP_PERSISTENCE_SESSION
+Patch202: php-cve-2026-7261.patch
+# GHSA-hmxp-6pc4-f3vv (CVE-2026-7262) soap Apache map value NULL check
+Patch203: php-cve-2026-7262.patch
+# GHSA-7qg2-v9fj-4mwv (CVE-2026-6735) fpm XSS within status endpoint
+Patch204: php-cve-2026-6735.patch
+# GHSA-wm6j-2649-pv75 (CVE-2026-7259) mbstring NULL dereference
+Patch205: php-cve-2026-7259.patch
+# GHSA-96wq-48vp-hh57 (CVE-2026-7568) metaphone overflow; GHSA-m8rr-4c36-8gq4 -d check
+Patch206: php-cve-2026-7568.patch
+# GHSA-m8rr-4c36-8gq4 (CVE-2026-7258) unsigned char to ctype.h; NEWS 8.2.31
+Patch207: php-cve-2026-7258.patch
+# CVE-2026-14355 openssl_encrypt() heap overflow with AES-WRAP-PAD (from 8.2.32)
+Patch208: php-cve-2026-14355.patch
+# CVE-2026-9672 bundled libgd GIF reader (from 8.2.33)
+Patch209: php-cve-2026-9672.patch
+# GHSA-7qpv-r5mr-78m4 (CVE-2026-17543) pgsql SQL injection via E'...' (from 8.2.33)
+Patch210: php-cve-2026-17543.patch
+# GHSA-vc5h-9ppw-p5f3 (CVE-2026-7260) phar circular symlink crash (from 8.2.33)
+Patch211: php-cve-2026-7260.patch
+# GH-22643 DatePeriod double __construct() leak; NEWS 8.2.33
+Patch212: php-gh22643.patch
+# 8.2.34 security release, ported to 8.1 (17 commits)
+Patch213: php-from-8.2.34-to-8.1.patch
+# 8.2.35: GHSA-w8hw-w9fx-j79w, GHSA-6wmf-4rv5-p3rp bailout mitigation
+Patch214: php-from-8.2.35-to-8.1.patch
+# 8.2.36 security release, ported to 8.1; CVE-2024-11235
+Patch215: php-from-8.2.36-to-8.1.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
@@ -791,21 +794,22 @@ find . -name '._*' -delete
 # upstream patches
 
 # security patches
-%patch -P200 -p1 -b .cve109618
-%patch -P201 -p1 -b .cve129538
-%patch -P202 -p1 -b .cve129496
-%patch -P203 -p1 -b .cve129289
+%patch -P200 -p1 -b .cve14179
+%patch -P201 -p1 -b .cve6722
+%patch -P202 -p1 -b .cve7261
+%patch -P203 -p1 -b .cve7262
 %patch -P204 -p1 -b .cve6735
-%patch -P205 -p1 -b .cve129292
-%patch -P206 -p1 -b .cve129291
-%patch -P207 -p1 -b .cve128090
-%patch -P208 -p1 -b .cve126714
-%patch -P209 -p1 -b .cve115560
-%patch -P210 -p1 -b .cve15353
-%patch -P211 -p1 -b .cve91765
-%patch -P212 -p1 -b .cve129506
-%patch -P213 -p1 -b .cve128064
-%patch -P214 -p1 -b .cve127960
+%patch -P205 -p1 -b .cve7259
+%patch -P206 -p1 -b .cve7568
+%patch -P207 -p1 -b .cve7258
+%patch -P208 -p1 -b .cve14355
+%patch -P209 -p1 -b .cve9672
+%patch -P210 -p1 -b .cve17543
+%patch -P211 -p1 -b .cve7260
+%patch -P212 -p1 -b .gh22643
+%patch -P213 -p1 -b .8234
+%patch -P214 -p1 -b .8235
+%patch -P215 -p1 -b .8236
 
 # Fixes for tests
 %patch -P300 -p1 -b .datetests
@@ -835,6 +839,11 @@ mkdir build-fpm
 %endif
 
 # ----- Manage known as failed test -------
+# outdated certificates (as remirepo)
+rm ext/openssl/tests/openssl_x509_parse_basic.phpt
+rm ext/openssl/tests/bug74341.phpt
+rm ext/openssl/tests/sni_server.phpt
+rm ext/openssl/tests/sni_server_key_cert.phpt
 # affected by systzdata patch
 rm ext/date/tests/timezone_location_get.phpt
 rm ext/date/tests/timezone_version_get.phpt
@@ -1603,6 +1612,57 @@ exit 0
 %endif
 
 %changelog
+* Fri Nov 20 2026 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.34-4
+- Security patches (Patch200+) replaced by remirepo's 8.1 backport series
+  (php81 8.1.34-7); the 8.1.34-3 fixes are carried over unchanged in substance
+- pdo_firebird SQL injection via NUL bytes in quoted strings
+  Fix GHSA-w476-322c-wpvm (CVE-2025-14179)
+- SOAP stale SOAP_GLOBAL(ref_map) pointer with Apache Map
+  Fix GHSA-85c2-q967-79q5 (CVE-2026-6722)
+- SOAP use-after-free after header parsing failure with SOAP_PERSISTENCE_SESSION
+  Fix GHSA-m33r-qmcv-p97q (CVE-2026-7261)
+- SOAP broken Apache map value NULL check
+  Fix GHSA-hmxp-6pc4-f3vv (CVE-2026-7262)
+- mbstring NULL pointer dereference in php_mb_check_encoding()
+  Fix GHSA-wm6j-2649-pv75 (CVE-2026-7259)
+- metaphone signed integer overflow of char array offset
+  Fix GHSA-96wq-48vp-hh57 (CVE-2026-7568)
+- Consistently pass unsigned char to ctype.h functions
+  Fix GHSA-m8rr-4c36-8gq4 (CVE-2026-7258)
+- openssl_encrypt() heap corruption with AES-WRAP-PAD
+  Fix CVE-2026-14355
+- bundled libgd GIF reader
+  Fix CVE-2026-9672
+- pgsql SQL injection via E'...' backslash breakout
+  Fix GHSA-7qpv-r5mr-78m4 (CVE-2026-17543)
+- phar crash via recursive symlinks
+  Fix GHSA-vc5h-9ppw-p5f3 (CVE-2026-7260)
+- Leak on double DatePeriod::__construct() call (GH-22643)
+- FILTER_SANITIZE_ENCODED does not encode 0xFF
+  Fix GHSA-ch8v-r6jh-4vvr
+- IPv6 ACL bypass in FastCGI listen.allowed_clients
+  Fix GHSA-62xp-839h-2637 (CVE-2026-91768)
+- Various packet overreads in mysqlnd wire protocol
+  Fix GHSA-r6x9-5r99-36j7 (CVE-2025-1218)
+- TLS hostname verification falls back to CN after SAN mismatch
+  Fix GHSA-vvx9-73fr-5jjx (CVE-2026-91769)
+- Heap buffer overflow in php_openssl_matches_wildcard_name()
+  Fix GHSA-xr7j-rvgx-xq5p (CVE-2026-91767)
+- Integer overflow in phar_tar_number() allowing TAR entry injection
+  Fix GHSA-j3wh-g957-2m85 (CVE-2026-6103)
+- Integer overflow to buffer overflow in SOAP HTTP parsing
+  Fix GHSA-cj93-vc83-wgqv (CVE-2025-14181)
+- Out-of-bounds read in convert.* stream filters
+  Fix GHSA-88hq-2827-7pg6 (CVE-2026-92842)
+- Cross-origin credential leak in HTTP stream wrapper redirects
+  Fix GHSA-fpwc-w8rq-cr92 (CVE-2026-91766)
+- Out-of-bounds read on redirect with an empty Location header
+  Fix GHSA-7875-c8px-7q5f (CVE-2026-93682)
+- Reference counting in php_request_shutdown causes use-after-free
+  Fix GHSA-rwp7-7vc6-8477 (CVE-2024-11235)
+- mysqlnd: reject OK messages past packet body
+- Skip openssl tests with outdated certificates
+
 * Thu Nov 19 2026 Alexander Ursu <alexander.ursu@gmail.com> - 8.1.34-3
 - PHP-CGI out-of-bounds read and write during PATH_INFO correction
   Fix GHSA-5j3f-64r7-f564 (CVE-2026-129538)
