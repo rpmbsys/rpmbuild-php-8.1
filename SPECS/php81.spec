@@ -1162,8 +1162,18 @@ popd
 %endif
 
 %check
-%if %{with_test}
-cd build-apache
+%if %{with_test} && %{with_cli}
+# build-apache and build-fpm are configured with --disable-cli:
+# run-tests.php needs sapi/cli/php, which only build-cli has
+cd build-cli
+# CGI (--POST/--GET tests) and FPM binaries come from their own builds;
+# without them 8.1's run-tests.php workers abort on an undefined $php_cgi
+%if %{with_cgi}
+export TEST_PHP_CGI_EXECUTABLE=$PWD/../build-cgi/sapi/cgi/php-cgi
+%endif
+%if %{with_fpm}
+export TEST_FPM_BINARY=$PWD/../build-fpm/sapi/fpm/php-fpm
+%endif
 
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
